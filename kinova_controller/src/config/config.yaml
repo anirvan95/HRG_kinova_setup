@@ -1,0 +1,4 @@
+gen3_vistac:
+  planning_frame: '/tool_frame'
+  pose_tolerance: 0.02
+  max_velocity: 0.1

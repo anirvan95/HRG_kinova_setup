@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:macro name="load_robot" params="arm gripper tactile_skin dof vision sim prefix">
+
+        <!-- Files to include -->
+        <xacro:include filename="$(find kortex_description)/arms/${arm}/${dof}dof/urdf/${arm}_macro.xacro" />
+
+        <xacro:if value="${sim}">
+            <!-- Arm transmission elements-->
+            <xacro:include filename="$(find kortex_description)/arms/${arm}/${dof}dof/urdf/${arm}_transmission_macro.xacro" />
+
+        </xacro:if>
+
+        <!-- Run the macros -->
+        <!-- For gazebo-->
+        <xacro:if value="${sim}">
+            <link name="world" />
+            <joint name="world_to_root" type="fixed">
+                <child link="${prefix}base_link" />
+                <parent link="world" />
+                <origin xyz="0 0 0" rpy="0 0 0" />
+            </joint>
+        </xacro:if>
+
+        <!-- Load the arm -->
+        <xacro:load_arm parent="" dof="${dof}" vision="${vision}" prefix="${prefix}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:load_arm>
+
+        <!--Define tool frame here for the tactile skin -->
+        <xacro:if value="${tactile_skin}">
+            <link name="${prefix}tac_skin">
+              <visual>
+                <origin xyz="0. 0. -0.025" rpy="0 0 0"  />
+                <geometry>
+                  <mesh filename="package://kortex_description/tactile_skin.stl"/>
+                </geometry>
+                <material name="black">
+                  <color rgba="0.1 0.1 0.1 1" />
+                </material>
+              </visual>
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                   <box size="0.08 0.08 0.04" />
+                </geometry>
+              </collision>
+            </link>
+            <joint name="${prefix}tac_skin_joint" type="fixed">
+                <origin xyz="0 0 0.02" rpy="0 0 0" />
+                <parent link="${prefix}${last_arm_link}" />
+                <child link="${prefix}tac_skin" />
+                <axis xyz="0 0 0" />
+            </joint>
+            <link name="${prefix}tool_frame"/>
+            <joint name="${prefix}tool_frame_joint" type="fixed">
+                <origin xyz="0 0 0.02" rpy="0 0 0" />
+                <parent link="${prefix}tac_skin" />
+                <child link="${prefix}tool_frame" />
+                <axis xyz="0 0 0" />
+            </joint>
+        </xacro:if>
+
+        <!-- Load the Gazebo transmissions and gazebo_ros_control plugin -->
+        <xacro:if value="${sim}">
+
+            <xacro:load_gazebo_arm_transmissions prefix="${prefix}"/>
+
+            <xacro:unless value="${not gripper}">
+                <xacro:load_gazebo_gripper_transmissions prefix="${prefix}"/>
+            </xacro:unless>
+
+            <gazebo>
+                <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+                    <legacyModeNS>true</legacyModeNS>
+                </plugin>
+            </gazebo>
+
+        </xacro:if>
+    </xacro:macro>
+</robot>

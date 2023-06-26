@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: kortex_description
+    relative_path: robots/gen3_vistac.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/7dof/gen3_vistac.srdf.xacro
+  CONFIG:
+    author_name: hrg_anirvan
+    author_email: hrg@ic.ac.uk
+    generated_timestamp: 1687360676
