@@ -1,0 +1,17 @@
+contact_velocity: 0.01
+exp_time: 10
+sampling_freq: 50
+scans: 14
+fsr_calibration_threshold: 15
+fsr_contact_threshold: 20
+db_path: 'data/soft_object_II/'
+pressing:
+  depth_min: 0.0005
+  depth_max: 0.0015
+  qt_min: 0.08
+  qt_max: 0.4
+precision:
+  angle_min: 3
+  angle_max: 6
+  qt_min: 0.75
+  qt_max: 1.5

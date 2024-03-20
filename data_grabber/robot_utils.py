@@ -88,7 +88,7 @@ class MoveItInterface():
         target_pose.position.z = z
 
         # Transforms the world pose to sensor pose
-        quat = tf.transformations.quaternion_from_euler(-math.pi, 0, -math.pi / 2, 'rxyz')
+        quat = tf.transformations.quaternion_from_euler(-math.pi, 0, 0, 'rxyz')
         target_pose.orientation.x = quat[0]
         target_pose.orientation.y = quat[1]
         target_pose.orientation.z = quat[2]
